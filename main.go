@@ -23,7 +23,7 @@ type sendmsgpp struct {
 	Msgg  string `json:"msg"`
 	//Name  string `json:"temp"`
 }
-var qpp = client.NewClient(1218897240,"q822497012")
+var qpp = client.NewClient(账号,"密码")
 func main() {
 
 
