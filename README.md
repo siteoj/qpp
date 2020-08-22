@@ -1,39 +1,62 @@
 # QPP
 
-#### 介绍
-{**以下是码云平台说明，您可以替换此简介**
-码云是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+**本项目遵守AGPL->v3协议**，请各位开发者遵守该协议的内容。
 
-#### 软件架构
-软件架构说明
+目前正在完善**http-api**，所以请大家在**issue**中提交未完成待实现的**http-api**
+
+**提交格式：**
+
+```go
+http.HandleFunc("/网页api地址", 函数名)
+
+type 结构体类型 struct{
+    大写字母.... 数据类型 `json:"json数据昵称"`
+    ...
+}
+
+func 函数名(w http.ResponseWriter, r *http.Request) {
+   defer r.Body.Close()
+   con, _ := ioutil.ReadAll(r.Body) //获取post的数据
+   fmt.Println(string(con))
+   var tt 结构体类型
+   err := json.Unmarshal(con, &tt)//解析json文件
+   if err != nil {
+      fmt.Println("json err:", err)
+   }
+   fmt.Println(tt)
+   //处理数据...
+}
+```
+
+#### 例子：
+
+```go
+http.HandleFunc("/prisend", sendingHandle)//私聊信息发送
+
+type sendmsgpp struct {
+	Receiver  string `json:"rcv"`//收信者
+	Msgg  string `json:"msg"`//信息内容
+}
+
+func sendingHandle(w http.ResponseWriter, r *http.Request) {
+   defer r.Body.Close()
+   con, _ := ioutil.ReadAll(r.Body) //获取post的数据
+   fmt.Println(string(con))
+   var tt sendmsgpp
+   err := json.Unmarshal(con, &tt)//解析
+   if err != nil {
+      fmt.Println("json err:", err)
+   }
+   fmt.Println(tt)
+   //处理数据，发送信息
+   var msg = message.NewSendingMessage()
+   msg.Append(message.NewText(tt.Msgg))
+   rcv, err := strconv.Atoi(tt.Receiver)
+   //qpp.SendPrivateMessage(int64(rcv), msg)
+   m:=sp(tt.Msgg,int64(rcv))
+   qpp.SendPrivateMessage(169829974,m)
+}
+```
 
 
-#### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
